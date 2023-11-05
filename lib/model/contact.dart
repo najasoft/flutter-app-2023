@@ -1,21 +1,24 @@
 class Contact {
+  int id;
   String nom;
   String prenom;
-  String age;
+  int age;
   String photo;
   String email;
-  String phone;
-  String adresse;
-  String ville;
-
   Contact({
+    required this.id,
     required this.nom,
     required this.prenom,
     required this.age,
     required this.photo,
     required this.email,
-    required this.phone,
-    required this.adresse,
-    required this.ville,
   });
+// Constructeur nommé
+  Contact.empty()
+      : id = 0,
+        nom = '',
+        prenom = '',
+        age = 0,
+        photo = '',
+        email = '';
 }

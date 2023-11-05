@@ -1,13 +1,14 @@
+import 'package:contactsapp/model/contact.dart';
 import 'package:flutter/material.dart';
 
 class AddContact extends StatelessWidget {
-  final ctr;
+  Contact contact;
   VoidCallback onAdd;
   VoidCallback onCancel;
 
   AddContact(
       {super.key,
-      required this.ctr,
+      required this.contact,
       required this.onAdd,
       required this.onCancel});
   @override
@@ -16,7 +17,9 @@ class AddContact extends StatelessWidget {
       content: SizedBox(
         height: 120,
         child: Column(children: [
-          TextField(controller: ctr),
+          TextField(
+            onChanged: (value) => contact.nom,
+          ),
           Row(
             children: [
               MaterialButton(onPressed: onAdd, child: Text("Add")),
