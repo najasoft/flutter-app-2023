@@ -116,7 +116,7 @@ class _AddContactFormState extends State<AddContactForm> {
                       image: _pickedImagePath != null
                           ? FileImage(File(_pickedImagePath!))
                               as ImageProvider<Object>
-                          : AssetImage('assets/placeholder.png'),
+                          : AssetImage('assets/images/placeholder.png'),
                     ),
                   ),
                 ),
