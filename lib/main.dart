@@ -1,12 +1,18 @@
 import 'package:contactsapp/contacts_list.dart';
+import 'package:contactsapp/data/base.dart';
+import 'package:contactsapp/data/contact_dao.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MainApp());
+  final database = ContactsBase();
+  final ContactDAO contactDAO = ContactDAO(database);
+
+  runApp(MainApp(contactDAO: contactDAO));
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  final ContactDAO contactDAO;
+  MainApp({super.key, required this.contactDAO});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class MainApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        body: ContactsList(),
+        body: ContactsList(contactDAO: contactDAO),
       ),
     );
   }

@@ -1,11 +1,12 @@
 import 'dart:io';
-import 'package:contactsapp/model/contact.dart';
+import 'package:contactsapp/data/base.dart';
+import 'package:contactsapp/data/contact_dao.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddContactForm extends StatefulWidget {
-  final Function(Contact) onSubmit;
-  AddContactForm({required this.onSubmit});
+  ContactDAO contactDAO;
+  AddContactForm({required this.contactDAO});
 
   @override
   _AddContactFormState createState() => _AddContactFormState();
@@ -13,7 +14,14 @@ class AddContactForm extends StatefulWidget {
 
 class _AddContactFormState extends State<AddContactForm> {
   final _formKey = GlobalKey<FormState>();
-  Contact contact = Contact.empty();
+
+  int? id;
+  String? nom;
+  String? prenom;
+  int? age;
+  String? photo;
+  String? email;
+
   String? _pickedImagePath;
 
   Future<void> _pickImage() async {
@@ -31,10 +39,11 @@ class _AddContactFormState extends State<AddContactForm> {
   void _saveContact() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      contact.photo = _pickedImagePath!;
-      // Iniiialiser l'id du contact
-      contact.id = DateTime.now().millisecondsSinceEpoch;
-      widget.onSubmit(contact);
+
+      photo = _pickedImagePath!;
+
+      widget.contactDAO.insertContact(ContactsCompanion.insert(
+          age: age!, nom: nom!, email: email!, photo: photo!, prenom: prenom!));
       Navigator.pop(context);
     }
   }
@@ -62,7 +71,7 @@ class _AddContactFormState extends State<AddContactForm> {
                   return null;
                 },
                 onSaved: (value) {
-                  contact.prenom = value!;
+                  prenom = value!;
                 },
               ),
               TextFormField(
@@ -75,7 +84,7 @@ class _AddContactFormState extends State<AddContactForm> {
                   }
                   return null;
                 },
-                onSaved: (newValue) => contact.nom = newValue!,
+                onSaved: (newValue) => nom = newValue!,
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -87,7 +96,7 @@ class _AddContactFormState extends State<AddContactForm> {
                   }
                   return null;
                 },
-                onSaved: (newValue) => contact.email = newValue!,
+                onSaved: (newValue) => email = newValue!,
               ),
               TextFormField(
                 decoration: const InputDecoration(
@@ -100,7 +109,7 @@ class _AddContactFormState extends State<AddContactForm> {
                   }
                   return null;
                 },
-                onSaved: (newValue) => contact.age = int.parse(newValue!),
+                onSaved: (newValue) => age = int.parse(newValue!),
               ),
               GestureDetector(
                 onTap: _pickImage,
@@ -116,7 +125,7 @@ class _AddContactFormState extends State<AddContactForm> {
                       image: _pickedImagePath != null
                           ? FileImage(File(_pickedImagePath!))
                               as ImageProvider<Object>
-                          : AssetImage('assets/placeholder.png'),
+                          : AssetImage('assets/images/placeholder.png'),
                     ),
                   ),
                 ),

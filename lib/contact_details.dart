@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:contactsapp/model/contact.dart';
+import 'package:contactsapp/data/base.dart';
 import 'package:flutter/material.dart';
 
 class ContactDetails extends StatelessWidget {

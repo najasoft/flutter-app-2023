@@ -1,37 +1,12 @@
 import 'package:contactsapp/add_contact_form.dart';
 import 'package:contactsapp/contact_box.dart';
-import 'package:contactsapp/model/contact.dart';
+import 'package:contactsapp/data/base.dart';
+import 'package:contactsapp/data/contact_dao.dart';
 import 'package:flutter/material.dart';
 
-class ContactsList extends StatefulWidget {
-  const ContactsList({super.key});
-
-  @override
-  State<ContactsList> createState() => _ContactsListState();
-}
-
-class _ContactsListState extends State<ContactsList> {
-  // Liste des contacts
-  List liste = [];
-
-  void change(bool? value, int index) {
-    setState(() {
-      liste[index][1] = value;
-    });
-  }
-
-  void saveContact(Contact contact) {
-    setState(() {
-      liste.add([contact, false]);
-    });
-  }
-
-  //Suppression d'un contact
-  void delContact(index) {
-    setState(() {
-      liste.removeAt(index);
-    });
-  }
+class ContactsList extends StatelessWidget {
+  final ContactDAO contactDAO;
+  ContactsList({super.key, required this.contactDAO});
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +16,33 @@ class _ContactsListState extends State<ContactsList> {
           onPressed: () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => AddContactForm(onSubmit: saveContact))),
+                  builder: (context) => AddContactForm(
+                        contactDAO: contactDAO,
+                      ))),
           child: Icon(Icons.person),
         ),
-        body: ListView.builder(
-            itemCount: liste.length,
-            itemBuilder: (context, index) {
-              return ContactBox(
-                contact: liste[index][0],
-                selContact: liste[index][1],
-                onChanged: (value) => change(value, index),
-                delContact: (context) => delContact(index),
-              );
+        body: StreamBuilder<List<Contact>>(
+            stream: contactDAO.getContactsStream(),
+            builder: (context, snapshot) {
+              if ((snapshot.hasData == false) ||
+                  snapshot.data == null ||
+                  snapshot.data!.isEmpty) {
+                if (snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Text("Aucun contact"),
+                  );
+                }
+              }
+              final contacts = snapshot.data;
+              return ListView.builder(
+                  itemCount: contacts!.length,
+                  itemBuilder: (context, index) {
+                    final contact = contacts[index];
+                    return ContactBox(
+                      contact: contact,
+                      contactDAO: contactDAO,
+                    );
+                  });
             }));
   }
 }

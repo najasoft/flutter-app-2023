@@ -1,21 +1,17 @@
 import 'dart:io';
 import 'package:contactsapp/contact_details.dart';
-import 'package:contactsapp/model/contact.dart';
+import 'package:contactsapp/data/base.dart';
+import 'package:contactsapp/data/contact_dao.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:path/path.dart';
 
 class ContactBox extends StatelessWidget {
   Contact contact;
-  bool selContact;
-  Function(bool?)? onChanged;
+  ContactDAO contactDAO;
   Function(BuildContext context)? delContact;
 
-  ContactBox(
-      {super.key,
-      required this.contact,
-      required this.selContact,
-      required this.onChanged,
-      required this.delContact});
+  ContactBox({super.key, required this.contact, required this.contactDAO});
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +22,7 @@ class ContactBox extends StatelessWidget {
           motion: StretchMotion(),
           children: [
             SlidableAction(
-              onPressed: delContact,
+              onPressed: (Context) => contactDAO.deleteContactById(contact.id!),
               icon: Icons.delete,
               backgroundColor: Colors.red,
               borderRadius: BorderRadius.circular(45),
@@ -43,7 +39,6 @@ class ContactBox extends StatelessWidget {
                 color: Colors.yellow, borderRadius: BorderRadius.circular(45)),
             child: Row(
               children: [
-                Checkbox(value: selContact, onChanged: onChanged),
                 Center(
                   child: Image.file(
                     width: 50,
