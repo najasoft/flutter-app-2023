@@ -669,6 +669,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.0+1"
+<<<<<<< HEAD
   sqlite3:
     dependency: transitive
     description:
@@ -693,6 +694,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.32.1"
+=======
+>>>>>>> 126cb6e385d3573ab6c434289b40c894ec15f79b
   stack_trace:
     dependency: transitive
     description:
